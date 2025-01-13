@@ -47,27 +47,34 @@ def save_volume_and_mask(image, mask, img_idx, save_path):
     else:
         print(f"Ignored: image_{img_idx} due to insufficient labeled data")
 
-def process_and_save_images(image_paths, mask_paths, save_path, crop_size=(128, 128, 128), offsets=(56, 56, 13)):
+def process_and_save_images(image_paths, mask_paths=None, save_path=None, crop_size=(128, 128, 128), offsets=(56, 56, 13)):
     """
-    Process and save a list of images and their corresponding masks.
+    Process and save a list of images and their corresponding masks (if available).
     """
     for img_idx in range(len(image_paths)):
-        print(f"Processing image and mask {img_idx + 1}/{len(image_paths)}")
-
+        print(f"Processing image {img_idx + 1}/{len(image_paths)}")
+        
         # Load and normalize images
         t2_image = load_and_normalize_image(image_paths[img_idx])
-        t1ce_image = load_and_normalize_image(mask_paths[img_idx])
-        flair_image = load_and_normalize_image(mask_paths[img_idx])
-
+        t1ce_image = load_and_normalize_image(image_paths[img_idx])  # Adjust for available modalities
+        flair_image = load_and_normalize_image(image_paths[img_idx])
+        
         # Combine channels
         combined_image = np.stack([flair_image, t1ce_image, t2_image], axis=-1)
-
-        # Load and process mask
-        mask = load_and_process_mask(mask_paths[img_idx])
-
-        # Crop images and masks
+        
+        # Crop image
         cropped_image = crop_volume(combined_image, crop_size, offsets)
-        cropped_mask = crop_volume(mask, crop_size, offsets)
+        
+        if mask_paths:
+            # Load and process mask if masks are provided
+            mask = load_and_process_mask(mask_paths[img_idx])
+            cropped_mask = crop_volume(mask, crop_size, offsets)
+            
+            # Save image and mask
+            save_volume_and_mask(cropped_image, cropped_mask, img_idx, save_path)
+        else:
+            # Save only the image if no masks are available
+            os.makedirs(os.path.join(save_path, 'images'), exist_ok=True)
+            np.save(os.path.join(save_path, f'images/image_{img_idx}.npy'), cropped_image)
+            print(f"Saved: image_{img_idx}.npy (no mask)")
 
-        # Save processed volumes
-        save_volume_and_mask(cropped_image, cropped_mask, img_idx, save_path)
