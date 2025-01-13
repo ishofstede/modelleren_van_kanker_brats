@@ -1,3 +1,7 @@
+"""
+pip install split-folders
+"""
+
 import splitfolders
 
 def split_data(input_folder, output_folder, ratio=(0.75, 0.25), seed=42):

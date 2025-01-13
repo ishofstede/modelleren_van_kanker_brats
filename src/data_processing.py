@@ -2,7 +2,6 @@ import numpy as np
 import nibabel as nib
 from keras.utils import to_categorical
 from sklearn.preprocessing import MinMaxScaler
-import glob
 import os
 
 scaler = MinMaxScaler()
