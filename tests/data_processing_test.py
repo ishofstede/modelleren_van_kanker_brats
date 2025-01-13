@@ -4,7 +4,7 @@ import nibabel as nib
 import os
 from keras.utils import to_categorical
 from sklearn.preprocessing import MinMaxScaler
-from src.data_processing import (  
+from python.data_processing import (  
     load_and_normalize_image,
     load_and_process_mask,
     crop_volume,
