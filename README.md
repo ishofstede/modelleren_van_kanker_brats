@@ -42,6 +42,8 @@ data/
 
 ├── BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData
 
+docs/
+
 notebooks/
 
 ├── python/
