@@ -39,9 +39,13 @@ The corresponding segmentation masks contain four classes:
 2. Place the data in the `data/` directory following this structure:
 
 data/
+
 ├── BraTS2020_TrainingData/MICCAI_BraTS2020_TrainingData
+
 notebooks/
+
 ├── python/
+
 tests/
 
 ---
